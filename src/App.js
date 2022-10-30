@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Dashboard from './components/dashboard/dashboard';
-import NewSchedule, { ManageSchedule} from './components/schedules/schedules';
+import NewSchedule, { Schedules} from './components/schedules/schedules';
 import Login from './components/login/Login';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import useToken from './components/customHooks/useToken';
@@ -9,7 +9,6 @@ import useToken from './components/customHooks/useToken';
 function App() {
   const { setToken, token } = useToken();
   console.log("token is: " + token);
-  console.log(setToken);
   if (!token) {
     return <Login setToken={setToken}/>
   }
@@ -20,7 +19,7 @@ function App() {
       <BrowserRouter>
         <Routes>
          <Route path='/dashboard' element={<Dashboard/>}></Route>
-         <Route path='/schedules' element={<ManageSchedule/>}></Route>
+         <Route path='/schedules' element={<Schedules/>}></Route>
         </Routes>
       </BrowserRouter>
     </div>
