@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import useToken from "../customHooks/useToken";
+import Table from "./table";
 
 
 async function newSchedule(schedule, token) {
@@ -13,18 +14,6 @@ async function newSchedule(schedule, token) {
     })
       .then(data => data.json())
    }
-   
-async function updateSchedule(schedule) {
-    return fetch('http://localhost:8080/schedules', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(schedule)
-    })
-      .then(data => data.json())
-   }
-
 
 
 export function Schedules() {
@@ -53,8 +42,10 @@ export function Schedules() {
     }
       
     return (<div className="login-wrapper">
+    <h1>Existing Schedules</h1>
+    <Table></Table>
     <h1>Schedules</h1>
-      <form  onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
             <label>
                 <p>From date</p>
                 <input type="date" onChange={e => setDateFrom(e.target.value)}/>

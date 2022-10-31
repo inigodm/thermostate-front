@@ -1,21 +1,21 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import './App.css';
 import Dashboard from './components/dashboard/dashboard';
-import NewSchedule, { Schedules} from './components/schedules/schedules';
+import {Schedules} from './components/schedules/schedules';
 import Login from './components/login/Login';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import useToken from './components/customHooks/useToken';
+import Table from './components/schedules/table';
 
 function App() {
   const { setToken, token } = useToken();
-  console.log("token is: " + token);
   if (!token) {
     return <Login setToken={setToken}/>
   }
 
   return (
     <div className="wrapper">
-     <h1>Application</h1>
+     <h1>Thermostate</h1>
       <BrowserRouter>
         <Routes>
          <Route path='/dashboard' element={<Dashboard/>}></Route>
