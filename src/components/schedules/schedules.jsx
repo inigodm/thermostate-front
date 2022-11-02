@@ -1,20 +1,8 @@
 import React, {useState} from "react";
 import useToken from "../customHooks/useToken";
 import Table from "./table";
-
-
-async function newSchedule(schedule, token) {
-    return fetch('http://localhost:8080/schedule', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify(schedule)
-    })
-      .then(data => data.json())
-   }
-
+import './schedules.css'
+import { newSchedule } from "./schedules-origin";
 
 export function Schedules() {
   const [dateFrom, setDateFrom] = useState();
@@ -46,30 +34,36 @@ export function Schedules() {
     <Table></Table>
     <h1>Schedules</h1>
       <form onSubmit={handleSubmit}>
-            <label>
-                <p>From date</p>
-                <input type="date" onChange={e => setDateFrom(e.target.value)}/>
-            </label>
-            <label>
-                <p>To date</p>
-                <input type="date" onChange={e => setDateTo(e.target.value)}/>
-            </label>
-            <label>
-                <p>From time</p>
-                <input type="time" onChange={e => setTimeFrom(e.target.value)}/>
-            </label>
-            <label>
-                <p>To time</p>
-                <input type="time" onChange={e => setTimeTo(e.target.value)}/>
-            </label>
-            <label>
-                <p>Min temp</p>
-                <input type="number" onChange={e => setMinTemp(e.target.value)}/>
-            </label>
-            <label>
-                <p>Active</p>
-                <input type="checkbox" onChange={e => setActive(e.target.value)}/>
-            </label>
+            <div className="twoDivsInline">
+              <div>
+                  <p>From date</p>
+                  <input type="date" onChange={e => setDateFrom(e.target.value)}/>
+              </div>
+              <div>
+                  <p>To date</p>
+                  <input type="date" onChange={e => setDateTo(e.target.value)}/>
+              </div>
+            </div>
+            <div className="twoDivsInline">
+              <div>
+                  <p>From time</p>
+                  <input type="time" onChange={e => setTimeFrom(e.target.value)}/>
+              </div>
+              <div>
+                  <p>To time</p>
+                  <input type="time" onChange={e => setTimeTo(e.target.value)}/>
+              </div>
+            </div>
+            <div className="twoDivsInline">
+              <div>
+                  <p>Min temp</p>
+                  <input type="number" onChange={e => setMinTemp(e.target.value)}/>
+              </div>
+              <div>
+                  <p>Active</p>
+                  <input type="checkbox" onChange={e => setActive(e.target.value)}/>
+              </div>
+            </div>
             <div>
                 <button type="submit">Submit</button>
             </div>

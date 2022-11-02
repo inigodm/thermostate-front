@@ -17,6 +17,15 @@ export default function Table() {
     };
     getSchedules();
   }, []);
+
+  //Pq esto NO funciona?
+  // Pq tengo 2 veces: 2 OPTION y 2 GET??
+   /*useEffect(() => {
+    getAllSchedules(token)
+    .then( data => { data.json()})
+    .then( json => { setAllSchedules(json.value)
+    });},
+   []);*/
   
  console.log(allSchedules.value);
   return (

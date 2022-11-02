@@ -6,6 +6,7 @@ import Login from './components/login/Login';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import useToken from './components/customHooks/useToken';
 import Table from './components/schedules/table';
+import Navigation from './components/navigation/navigation.jsx';
 
 function App() {
   const { setToken, token } = useToken();
@@ -15,6 +16,7 @@ function App() {
 
   return (
     <div className="wrapper">
+    <Navigation/>
      <h1>Thermostate</h1>
       <BrowserRouter>
         <Routes>
