@@ -1,9 +1,15 @@
 import React, {useEffect, useState} from "react";
 import useToken from "../customHooks/useToken";
 import getAllSchedules from "./schedules-origin";
-import './table.css'
+//import './table.css';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Checkbox from '@mui/material/Checkbox';
 
-export default function Table() {
+export default function TableComponent({handleClickInRow}) {
   const { token, setToken } = useToken();
 
   const [allSchedules, setAllSchedules]  = useState([]);
@@ -27,32 +33,36 @@ export default function Table() {
     });},
    []);*/
   
- console.log(allSchedules.value);
+ console.log(allSchedules?.value);
   return (
       <div className="App">
-        <table>
-          <tr>
-            <th>Active</th>
-            <th>Date From</th>
-            <th>Date To</th>
-            <th>Time From</th>
-            <th>Time To</th>
-            <th>Min. Temp</th>
-          </tr>
+        <Table>
+          <TableHead>
+          <TableRow>
+            <TableCell>Active</TableCell>
+            <TableCell>Date From</TableCell>
+            <TableCell>Date To</TableCell>
+            <TableCell>Time From</TableCell>
+            <TableCell>Time To</TableCell>
+            <TableCell>Min. Temp</TableCell>
+          </TableRow>
+          </TableHead>
+          <TableBody>
           { 
-          allSchedules.map((item) => {
+          allSchedules?.map((item) => {
             return (
-              <tr key={item.id}>
-                <td><input type="checkbox" checked={item.active}/></td>
-                <td>{item.dateFrom}</td>
-                <td>{item.dateTo}</td>
-                <td>{item.timeFrom}</td>
-                <td>{item.timeTo}</td>
-                <td>{item.minTemp}</td>
-              </tr>
+              <TableRow key={item.id} onClick={e => handleClickInRow(item.id, item.dateFrom, item.dateTo, item.timeFrom, item.timeTo, item.minTemp, item.active)}>
+                <TableCell><Checkbox checked={item.active}/></TableCell>
+                <TableCell>{item.dateFrom}</TableCell>
+                <TableCell>{item.dateTo}</TableCell>
+                <TableCell>{item.timeFrom}</TableCell>
+                <TableCell>{item.timeTo}</TableCell>
+                <TableCell>{item.minTemp}</TableCell>
+              </TableRow>
             )
           })}
-        </table>
+          </TableBody>
+        </Table>
       </div>
     );
   }

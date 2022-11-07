@@ -1,8 +1,11 @@
 import React, {useState} from "react";
 import useToken from "../customHooks/useToken";
-import Table from "./table";
+import TableComponent from "./table";
 import './schedules.css'
 import { newSchedule } from "./schedules-origin";
+import Button from '@mui/material/Button';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
 
 export function Schedules() {
   const [dateFrom, setDateFrom] = useState();
@@ -28,44 +31,53 @@ export function Schedules() {
         },
         token);
     }
+
+    const setScheduleShow = (_id, _dateFrom, _dateTo, _timeFrom, _timeTo, _minTemp, _activation) => {
+      setDateFrom(_dateFrom);
+      setDateTo(_dateTo);
+      setTimeFrom(_timeFrom);
+      setTimeTo(_timeTo);
+      setMinTemp(_minTemp);
+      setActive(_activation);
+    }
       
     return (<div className="login-wrapper">
     <h1>Existing Schedules</h1>
-    <Table></Table>
+    <TableComponent handleClickInRow={setScheduleShow}></TableComponent>
     <h1>Schedules</h1>
       <form onSubmit={handleSubmit}>
             <div className="twoDivsInline">
               <div>
-                  <p>From date</p>
-                  <input type="date" onChange={e => setDateFrom(e.target.value)}/>
+                  <InputLabel>From date</InputLabel>
+                  <Input type="date" onChange={e => setDateFrom(e.target.value)} value={dateFrom}/>
               </div>
               <div>
-                  <p>To date</p>
-                  <input type="date" onChange={e => setDateTo(e.target.value)}/>
-              </div>
-            </div>
-            <div className="twoDivsInline">
-              <div>
-                  <p>From time</p>
-                  <input type="time" onChange={e => setTimeFrom(e.target.value)}/>
-              </div>
-              <div>
-                  <p>To time</p>
-                  <input type="time" onChange={e => setTimeTo(e.target.value)}/>
+                  <InputLabel>To date</InputLabel>
+                  <Input type="date" onChange={e => setDateTo(e.target.value)} value={dateTo}/>
               </div>
             </div>
             <div className="twoDivsInline">
               <div>
-                  <p>Min temp</p>
-                  <input type="number" onChange={e => setMinTemp(e.target.value)}/>
+                  <InputLabel>From time</InputLabel>
+                  <Input type="time" onChange={e => setTimeFrom(e.target.value)} value={timeFrom}/>
               </div>
               <div>
-                  <p>Active</p>
-                  <input type="checkbox" onChange={e => setActive(e.target.value)}/>
+                  <InputLabel>To time</InputLabel>
+                  <Input type="time" onChange={e => setTimeTo(e.target.value)} value={timeTo}/>
+              </div>
+            </div>
+            <div className="twoDivsInline">
+              <div>
+                  <InputLabel>Min temp</InputLabel>
+                  <Input type="number" onChange={e => setMinTemp(e.target.value)} value={minTemp}/>
+              </div>
+              <div>
+                  <InputLabel>Active</InputLabel>
+                  <Input type="checkbox" onChange={e => setActive(e.target.value)} value={activation}/>
               </div>
             </div>
             <div>
-                <button type="submit">Submit</button>
+                <Button variant="contained" type="submit">Submit</Button>
             </div>
       </form>
   </div>);

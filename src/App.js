@@ -5,7 +5,6 @@ import {Schedules} from './components/schedules/schedules';
 import Login from './components/login/Login';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import useToken from './components/customHooks/useToken';
-import Table from './components/schedules/table';
 import Navigation from './components/navigation/navigation.jsx';
 
 function App() {
