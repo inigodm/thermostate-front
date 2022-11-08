@@ -9,6 +9,13 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import Checkbox from '@mui/material/Checkbox';
 import { DeleteForever } from '@mui/icons-material';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 export default function TableComponent({handleClickInRow}) {
   const { token, setToken } = useToken();
@@ -28,6 +35,18 @@ export default function TableComponent({handleClickInRow}) {
   const handleDelete = (id) => {
      const response = deleteSchedule(id, token);
   }
+
+  const queryClient = useQueryClient()
+  const query = useQuery({ queryKey: ['allSchedulles'], queryFn: getAllSchedules })
+
+  const mutation = useMutation({
+    mutationFn: deleteSchedule,
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['todos'] })
+    },
+  })
+
   //Pq esto NO funciona?
   // Pq tengo 2 veces: 2 OPTION y 2 GET??
    /*useEffect(() => {
@@ -63,7 +82,11 @@ export default function TableComponent({handleClickInRow}) {
                 <TableCell>{item.timeFrom}</TableCell>
                 <TableCell>{item.timeTo}</TableCell>
                 <TableCell>{item.minTemp}</TableCell>
-                <TableCell><DeleteForever color="primary" onClick={(e) => handleDelete(item.id)}/></TableCell>
+                <TableCell><DeleteForever color="primary" onClick={() =>  { mutation.mutate({
+                  id: item.id,
+                  token: token
+                })  
+              }}/></TableCell>
               </TableRow>
             )
           })}

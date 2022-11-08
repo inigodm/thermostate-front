@@ -6,6 +6,13 @@ import { newSchedule, updateSchedule } from "./schedules-origin";
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 export function Schedules() {
   const [dateFrom, setDateFrom] = useState();
@@ -16,8 +23,9 @@ export function Schedules() {
   const [minTemp, setMinTemp] = useState();
   const [activation, setActive] = useState();
   const { setToken, token } = useToken();
-  
+
   const activeOnInit = true;
+
 
     const handleCreateSubmit = async e => {
         e.preventDefault();
@@ -28,7 +36,7 @@ export function Schedules() {
           dateTo,
           timeFrom,
           timeTo,
-          active,
+          active, 
           minTemp
         },
         token);
