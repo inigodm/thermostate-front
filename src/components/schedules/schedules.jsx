@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import useToken from "../customHooks/useToken";
 import TableComponent from "./table";
 import './schedules.css'
-import { newSchedule } from "./schedules-origin";
+import { newSchedule, updateSchedule } from "./schedules-origin";
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
@@ -10,17 +10,19 @@ import InputLabel from '@mui/material/InputLabel';
 export function Schedules() {
   const [dateFrom, setDateFrom] = useState();
   const [dateTo, setDateTo] = useState();
+  const [id, setId] = useState();
   const [timeFrom, setTimeFrom] = useState();
   const [timeTo, setTimeTo] = useState();
   const [minTemp, setMinTemp] = useState();
   const [activation, setActive] = useState();
   const { setToken, token } = useToken();
   
+  const activeOnInit = true;
 
-    const handleSubmit = async e => {
+    const handleCreateSubmit = async e => {
         e.preventDefault();
         console.log(token);
-        const active = activation === "on" ? "true" : "false";
+        const active = activation;
         const schedule = await newSchedule({
           dateFrom,
           dateTo,
@@ -32,6 +34,30 @@ export function Schedules() {
         token);
     }
 
+    const handleUpdateSubmit = async e => {
+      if(id === undefined) {
+        return handleCreateSubmit(e);
+      }
+      e.preventDefault();
+      console.log(token);
+      const active = activation;
+      const schedule = await updateSchedule({
+        id,
+        dateFrom,
+        dateTo,
+        timeFrom,
+        timeTo,
+        active,
+        minTemp
+      },
+      token);
+  }
+
+    const handleCheckChange = (e) => {
+      console.log(e.target.checked + " => " + activation)
+      setActive(e.target.checked);
+    }
+
     const setScheduleShow = (_id, _dateFrom, _dateTo, _timeFrom, _timeTo, _minTemp, _activation) => {
       setDateFrom(_dateFrom);
       setDateTo(_dateTo);
@@ -39,13 +65,19 @@ export function Schedules() {
       setTimeTo(_timeTo);
       setMinTemp(_minTemp);
       setActive(_activation);
+      setId(_id);
     }
+
+    useEffect(() => {
+      setActive(activeOnInit);
+    }, []); 
       
     return (<div className="login-wrapper">
     <h1>Existing Schedules</h1>
     <TableComponent handleClickInRow={setScheduleShow}></TableComponent>
     <h1>Schedules</h1>
-      <form onSubmit={handleSubmit}>
+      <form>
+            <input type="hidden" name="id" value={id}/>
             <div className="twoDivsInline">
               <div>
                   <InputLabel>From date</InputLabel>
@@ -73,11 +105,14 @@ export function Schedules() {
               </div>
               <div>
                   <InputLabel>Active</InputLabel>
-                  <Input type="checkbox" onChange={e => setActive(e.target.value)} value={activation}/>
+                  <input type="checkbox" onChange={handleCheckChange}  defaultChecked={activeOnInit} defaultValue={activeOnInit} value={activation} checked={activation}/>
               </div>
             </div>
             <div>
-                <Button variant="contained" type="submit">Submit</Button>
+                <Button variant="contained" type="button" onClick={handleCreateSubmit}>Create new</Button>
+            </div>
+            <div>
+                <Button variant="contained" type="button" onClick={handleUpdateSubmit}>Update</Button>
             </div>
       </form>
   </div>);
