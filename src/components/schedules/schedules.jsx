@@ -6,13 +6,7 @@ import { newSchedule, updateSchedule } from "./schedules-origin";
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export function Schedules() {
   const [dateFrom, setDateFrom] = useState();
@@ -27,19 +21,11 @@ export function Schedules() {
   const activeOnInit = true;
 
 
+  const queryClient = useQueryClient()
+
     const handleCreateSubmit = async e => {
         e.preventDefault();
-        console.log(token);
-        const active = activation;
-        const schedule = await newSchedule({
-          dateFrom,
-          dateTo,
-          timeFrom,
-          timeTo,
-          active, 
-          minTemp
-        },
-        token);
+        mutationCreate.mutate();
     }
 
     const handleUpdateSubmit = async e => {
@@ -47,9 +33,12 @@ export function Schedules() {
         return handleCreateSubmit(e);
       }
       e.preventDefault();
-      console.log(token);
-      const active = activation;
-      const schedule = await updateSchedule({
+      mutationUpdate.mutate();
+  }
+
+  const mutateSchedule = () => {
+    const active = activation;
+      const schedule = updateSchedule({
         id,
         dateFrom,
         dateTo,
@@ -60,6 +49,31 @@ export function Schedules() {
       },
       token);
   }
+
+  const insertSchedule = () => {
+    const active = activation;
+    const schedule = newSchedule({
+      dateFrom,
+      dateTo,
+      timeFrom,
+      timeTo,
+      active, 
+      minTemp
+    },
+    token);
+  }
+
+  const mutationCreate = useMutation(insertSchedule, {
+    onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['allSchedulles'] })
+    }
+  })
+
+  const mutationUpdate = useMutation(mutateSchedule, {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['allSchedulles'] })
+    }
+  })
 
     const handleCheckChange = (e) => {
       console.log(e.target.checked + " => " + activation)
