@@ -9,41 +9,33 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import Checkbox from '@mui/material/Checkbox';
 import { DeleteForever } from '@mui/icons-material';
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function TableComponent({handleClickInRow}) {
   const { token, setToken } = useToken();
+  const queryClient = useQueryClient()
 
-  const [allSchedules, setAllSchedules]  = useState([]);
 
-
-  useEffect(() => {
-    const getSchedules = async () => {
-      const data = await getAllSchedules(token);
-      const json = await data.json();
-      setAllSchedules(json.value);
-    };
-    getSchedules();
-  }, []);
+  const getSchedules = async () => {
+    const data = await getAllSchedules(token);
+    const json = await data.json();
+    return json.value;
+  };
 
   const handleDelete = (id) => {
-     const response = deleteSchedule(id, token);
+    deleteSchedule(id, token);
+
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['allSchedulles'] })
   }
 
-  const queryClient = useQueryClient()
-  const query = useQuery({ queryKey: ['allSchedulles'], queryFn: getAllSchedules })
+  const { isLoading, isError, data, error } = useQuery({ queryKey: ['allSchedulles'], queryFn: getSchedules })
 
   const mutation = useMutation({
-    mutationFn: deleteSchedule,
+    mutationFn: handleDelete,
     onSuccess: () => {
       // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ['todos'] })
+      queryClient.invalidateQueries({ queryKey: ['allSchedulles'] })
     },
   })
 
@@ -56,7 +48,7 @@ export default function TableComponent({handleClickInRow}) {
     });},
    []);*/
 
- console.log(allSchedules?.value);
+ console.log(data?.value);
   return (
       <div className="App">
         <Table>
@@ -73,7 +65,7 @@ export default function TableComponent({handleClickInRow}) {
           </TableHead>
           <TableBody>
           { 
-          allSchedules?.map((item) => {
+          data?.map((item) => {
             return (
               <TableRow key={item.id} onClick={e => handleClickInRow(item.id, item.dateFrom, item.dateTo, item.timeFrom, item.timeTo, item.minTemp, item.active)}>
                 <TableCell><Checkbox defaultChecked={item.active} onClick={(e) => { e.preventDefault()}}/></TableCell>
@@ -82,10 +74,9 @@ export default function TableComponent({handleClickInRow}) {
                 <TableCell>{item.timeFrom}</TableCell>
                 <TableCell>{item.timeTo}</TableCell>
                 <TableCell>{item.minTemp}</TableCell>
-                <TableCell><DeleteForever color="primary" onClick={() =>  { mutation.mutate({
-                  id: item.id,
-                  token: token
-                })  
+                <TableCell><DeleteForever color="primary" onClick={() =>  { mutation.mutate(
+                  item.id
+                )  
               }}/></TableCell>
               </TableRow>
             )
