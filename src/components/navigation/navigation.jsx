@@ -11,7 +11,7 @@ export default function Navigation() {
     setValue(newValue);
   };
 
-    return  <Tabs value={value} onChange={handleChange}  aria-label="wrapped label tabs example">
+    return  <Tabs value={1} onChange={handleChange}  aria-label="wrapped label tabs example">
     <Tab href="/main" label="Main"></Tab>
     <Tab href="/schedules" label="Schedules"/>
     <Tab href="/user" label="User management"></Tab>

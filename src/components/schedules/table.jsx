@@ -23,9 +23,9 @@ export default function TableComponent({handleClickInRow}) {
   };
 
   const handleDelete = (id) => {
-    deleteSchedule(id, token);
-
+      deleteSchedule(id, token);
       // Invalidate and refetch
+      console.log("a call");
       queryClient.invalidateQueries({ queryKey: ['allSchedulles'] })
   }
 
@@ -35,20 +35,14 @@ export default function TableComponent({handleClickInRow}) {
     mutationFn: handleDelete,
     onSuccess: () => {
       // Invalidate and refetch
+      console.log("another call");
       queryClient.invalidateQueries({ queryKey: ['allSchedulles'] })
     },
+    onError: (e) => {
+      console.log("error" + e)
+    }
   })
 
-  //Pq esto NO funciona?
-  // Pq tengo 2 veces: 2 OPTION y 2 GET??
-   /*useEffect(() => {
-    getAllSchedules(token)
-    .then( data => { data.json()})
-    .then( json => { setAllSchedules(json.value)
-    });},
-   []);*/
-
- console.log(data?.value);
   return (
       <div className="App">
         <Table>
