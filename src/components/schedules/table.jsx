@@ -26,7 +26,7 @@ export default function TableComponent({handleClickInRow}) {
       deleteSchedule(id, token);
       // Invalidate and refetch
       console.log("a call");
-      queryClient.invalidateQueries({ queryKey: ['allSchedulles'] })
+      queryClient.refetchQueries({ queryKey: ['allSchedulles'] })
   }
 
   const { isLoading, isError, data, error } = useQuery({ queryKey: ['allSchedulles'], queryFn: getSchedules })
@@ -36,7 +36,7 @@ export default function TableComponent({handleClickInRow}) {
     onSuccess: () => {
       // Invalidate and refetch
       console.log("another call");
-      queryClient.invalidateQueries({ queryKey: ['allSchedulles'] })
+      queryClient.refetchQueries({ queryKey: ['allSchedulles'] })
     },
     onError: (e) => {
       console.log("error" + e)

@@ -65,13 +65,13 @@ export function Schedules() {
 
   const mutationCreate = useMutation(insertSchedule, {
     onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['allSchedulles'] })
+    queryClient.refetchQueries({ queryKey: ['allSchedulles'] })
     }
   })
 
   const mutationUpdate = useMutation(mutateSchedule, {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['allSchedulles'] })
+      queryClient.refetchQueries({ queryKey: ['allSchedulles'] })
     }
   })
 
