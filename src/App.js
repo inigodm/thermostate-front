@@ -7,6 +7,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import useToken from './components/customHooks/useToken';
 import Navigation from './components/navigation/navigation.jsx';
 import { QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Main } from './components/main/Main';
+
 
 function App() {
   const { setToken, token } = useToken();
@@ -21,8 +24,10 @@ function App() {
     <Navigation/>
      <h1>Thermostate</h1>
      <QueryClientProvider client={queryClient}>
+     <ReactQueryDevtools initialIsOpen={true} />
       <BrowserRouter>
         <Routes>
+         <Route path='/main' element={<Main/>}></Route>
          <Route path='/dashboard' element={<Dashboard/>}></Route>
          <Route path='/schedules' element={<Schedules/>}></Route>
         </Routes>
