@@ -18,7 +18,6 @@ export async function newSchedule(schedule, token) {
       },
       body: JSON.stringify(schedule)
     })
-      .then(data => data.json())
    }
 
 
@@ -31,7 +30,6 @@ export async function updateSchedule(schedule, token) {
     },
     body: JSON.stringify(schedule)
   })
-    .then(data => data.json())
  }
 
  export async function deleteSchedule(id, token) {
@@ -42,6 +40,5 @@ export async function updateSchedule(schedule, token) {
       'Authorization': token
     }
   })
-    .then(data => data.json())
  }
  

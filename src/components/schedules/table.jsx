@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import Checkbox from '@mui/material/Checkbox';
-import { DeleteForever } from '@mui/icons-material';
+import { DeleteForever, DeleteForeverRounded } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function TableComponent({handleClickInRow}) {
@@ -22,21 +22,22 @@ export default function TableComponent({handleClickInRow}) {
     return json.value;
   };
 
-  const handleDelete = (id) => {
-      deleteSchedule(id, token);
-      // Invalidate and refetch
-      console.log("a call");
-      queryClient.refetchQueries({ queryKey: ['allSchedulles'] })
-  }
-
   const { isLoading, isError, data, error } = useQuery({ queryKey: ['allSchedulles'], queryFn: getSchedules })
 
+  const handleDelete = async (id) => {
+      await mutation.mutateAsync(id, token);
+  }
+
+  const deleteFunction = (id) => {
+    deleteSchedule(id, token);
+  }
+
   const mutation = useMutation({
-    mutationFn: handleDelete,
+    mutationFn: deleteFunction,
     onSuccess: () => {
-      // Invalidate and refetch
-      console.log("another call");
-      queryClient.refetchQueries({ queryKey: ['allSchedulles'] })
+      // Invalidate, refetch
+      queryClient.invalidateQueries({ queryKey: ['allSchedulles'] });
+      queryClient.refetchQueries({ queryKey: ['allSchedulles'] });
     },
     onError: (e) => {
       console.log("error" + e)
@@ -61,17 +62,21 @@ export default function TableComponent({handleClickInRow}) {
           { 
           data?.map((item) => {
             return (
-              <TableRow key={item.id} onClick={e => handleClickInRow(item.id, item.dateFrom, item.dateTo, item.timeFrom, item.timeTo, item.minTemp, item.active)}>
+              <TableRow key={item.id} onClick={e => handleClickInRow(
+                item.id, 
+                item.dateFrom, 
+                item.dateTo, 
+                item.timeFrom, 
+                item.timeTo, 
+                item.minTemp, 
+                item.active)}>
                 <TableCell><Checkbox defaultChecked={item.active} onClick={(e) => { e.preventDefault()}}/></TableCell>
                 <TableCell>{item.dateFrom}</TableCell>
                 <TableCell>{item.dateTo}</TableCell>
                 <TableCell>{item.timeFrom}</TableCell>
                 <TableCell>{item.timeTo}</TableCell>
                 <TableCell>{item.minTemp}</TableCell>
-                <TableCell><DeleteForever color="primary" onClick={() =>  { mutation.mutate(
-                  item.id
-                )  
-              }}/></TableCell>
+                <TableCell><DeleteForever color="primary" onClick={() => handleDelete(item.id)}/></TableCell>
               </TableRow>
             )
           })}

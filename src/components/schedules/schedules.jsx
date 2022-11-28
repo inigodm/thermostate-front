@@ -27,7 +27,7 @@ export function Schedules() {
       e.preventDefault();
       await mutationCreate.mutateAsync();
   }
-
+  
   const handleUpdateSubmit = async e => {
     if(id === undefined) {
       return handleCreateSubmit(e);
@@ -36,9 +36,9 @@ export function Schedules() {
     await mutationUpdate.mutateAsync();
   }
 
-  const mutateSchedule = () => {
+  const mutateSchedule = async () => {
     const active = activation;
-      const schedule = updateSchedule({
+      const schedule = await updateSchedule({
         id,
         dateFrom,
         dateTo,
@@ -50,9 +50,9 @@ export function Schedules() {
       token);
   }
 
-  const insertSchedule = () => {
+  const insertSchedule = async () => {
     const active = activation;
-    const schedule = newSchedule({
+    const schedule = await newSchedule({
       dateFrom,
       dateTo,
       timeFrom,
